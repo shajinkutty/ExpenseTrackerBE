@@ -12,7 +12,10 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please enter a username"],
       unique: true,
     },
-    password: String,
+    password: {
+      type: String,
+      select: false,
+    },
     active: Boolean,
   },
   { timestamps: true }
@@ -40,9 +43,6 @@ userSchema.pre("save", async function (next) {
 userSchema.statics.login = async function (userName, password) {
   const user = await this.findOne({ userName });
   if (user) {
-    if (!user.active) {
-      throw Error("User In active");
-    }
     const auth = await bcrypt.compare(password, user.password);
     if (auth) {
       return user;
