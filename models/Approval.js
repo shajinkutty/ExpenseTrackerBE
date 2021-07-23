@@ -3,7 +3,12 @@ const approvalSchema = new mongoose.Schema(
   {
     requesterId: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
     totalApprovar: Number,
-    approverId: [String],
+    approverId: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
+      },
+    ],
   },
   { timestamps: true }
 );

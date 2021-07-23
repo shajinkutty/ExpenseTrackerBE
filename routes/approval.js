@@ -3,6 +3,6 @@ const { sendApprovalRequest, approved } = require("../controls/approval");
 const router = express.Router();
 
 router.post("/", sendApprovalRequest);
-router.post("/approved", approved);
+router.patch("/approved/:approvalId", approved);
 
 module.exports = router;

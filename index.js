@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const redis = require("redis");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 dotenv.config();
 
 const client = redis.createClient(process.env.REDISCLOUD_URL, {
@@ -33,6 +34,12 @@ const approvalRoutes = require("./routes/approval");
 // dashboard controls
 const { dashboardEndPoint } = require("./controls/dashboard");
 
+app.use(
+  cors({
+    credentials: true,
+    origin: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 app.get("/dashboard", requireAuth, dashboardEndPoint);
