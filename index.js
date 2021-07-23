@@ -50,6 +50,9 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+app.get("/", (req, res) => {
+  res.send("server running");
+});
 app.get("/dashboard", requireAuth, dashboardEndPoint);
 app.use("/closeExpense", requireAuth, approvalRoutes);
 app.use(userRoutes);
