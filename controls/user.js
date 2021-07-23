@@ -6,7 +6,14 @@ const client = require("../helpers/init_redis");
 const createToken = (id, expiry) => {
   return jwt.sign({ id }, process.env.SECRET_KEY, { expiresIn: expiry });
 };
-
+exports.getUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(401).json("something went wrong");
+  }
+};
 exports.addNewUser = async (req, res) => {
   const { fullName, userName, password } = req.body;
   try {
@@ -75,5 +82,15 @@ exports.changePassword = async (req, res) => {
     res.status(200).json(response);
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+};
+
+exports.checkUserActive = async (req, res) => {
+  const userId = req.userId;
+  const { active } = await User.findById(userId);
+  if (active) {
+    res.status(200).json("user is active");
+  } else {
+    res.status(401).json({ error: "Access denined" });
   }
 };

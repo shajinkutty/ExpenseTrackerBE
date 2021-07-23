@@ -9,8 +9,12 @@ const {
   userLogin,
   userInactive,
   changePassword,
+  getUsers,
+  checkUserActive,
 } = require("../controls/user");
 
+router.get("/users", requireAuth, getUsers);
+router.get("/checkUserActive", requireAuth, checkUserActive);
 router.post("/addUser", requireAuth, addNewUser);
 router.post("/login", userLogin);
 router.post("/switchUserStatus", requireAuth, userInactive);

@@ -15,7 +15,11 @@ exports.sendApprovalRequest = async (req, res) => {
       totalApprovar: users.length,
       approverId: [userId],
     });
-    res.status(200).json(newApprove);
+    const response = await Approval.findOne().populate({
+      path: "approverId",
+      select: ["fullName"],
+    });
+    res.status(200).json(response);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -34,7 +38,10 @@ exports.approved = async (req, res) => {
       approverId: [...approval._doc.approverId, userId],
     };
     const result = await Approval.updateOne({ _id: approvalId }, update);
-    const response = await Approval.find();
+    const response = await Approval.findOne().populate({
+      path: "approverId",
+      select: ["fullName"],
+    });
 
     //  if total active users greater than or equel to total approved
     //  user ids delete the entire approval collection and all live expence change to false
@@ -50,5 +57,14 @@ exports.approved = async (req, res) => {
     }
   } catch (error) {
     res.status(404).json(error.message);
+  }
+};
+
+exports.deleteCloseRequest = async (req, res) => {
+  try {
+    const response = await Approval.deleteMany();
+    res.status(200).json("Deleted");
+  } catch (error) {
+    res.status(401).json("Something went wrong");
   }
 };

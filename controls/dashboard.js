@@ -16,10 +16,12 @@ exports.dashboardEndPoint = async (req, res) => {
     const { _id, fullName, userName, active } = await User.findById(req.userId);
     const userExpense = await Expense.find({ isLive: true, userId: _id });
     const totalMembers = await User.countDocuments({ active: true });
-    const expenseData = await Expense.find({ isLive: true }).populate({
-      path: "userId",
-      select: ["fullName"],
-    });
+    const expenseData = await Expense.find({ isLive: true })
+      .populate({
+        path: "userId",
+        select: ["fullName"],
+      })
+      .sort({ date: -1 });
     const closeAction = await Approval.findOne().populate({
       path: "approverId",
       select: ["fullName"],
@@ -36,13 +38,8 @@ exports.dashboardEndPoint = async (req, res) => {
       expenseData,
       LiveTotalAmount: expenseSum(expenseData),
       userExpense: expenseSum(userExpense),
-      closeAction: closeAction
-        ? closeAction
-        : {
-            _id: "",
-            requesterId: "",
-            totalApprovar: 0,
-          },
+      closeAction,
+      isLive: closeAction ? false : true,
     });
   } catch (error) {
     res.status(400).json(error.message);

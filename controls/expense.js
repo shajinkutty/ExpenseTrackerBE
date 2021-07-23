@@ -14,11 +14,16 @@ exports.getAllExpenses = async (req, res) => {
 };
 
 exports.addExpense = async (req, res) => {
-  const { amount, date, description, userId } = req.body;
+  const { amount, date, description } = req.body;
+  const userId = req.userId;
 
   try {
     const expense = await Expense.create({ amount, date, description, userId });
-    res.status(200).json(expense);
+    const newExpense = await Expense.findById(expense._id).populate({
+      path: "userId",
+      select: ["fullName"],
+    });
+    res.status(200).json(newExpense);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -27,10 +32,12 @@ exports.addExpense = async (req, res) => {
 exports.getUserExpenses = async (req, res) => {
   const { userId } = req.params;
   try {
-    const expense = await Expense.find({ userId }).populate({
-      path: "userId",
-      select: ["fullName"],
-    });
+    const expense = await Expense.find({ userId, isLive: true })
+      .populate({
+        path: "userId",
+        select: ["fullName"],
+      })
+      .sort({ date: -1 });
     res.json(expense);
   } catch (error) {
     res.status(400).json({ error: error.message });
