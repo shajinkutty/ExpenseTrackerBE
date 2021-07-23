@@ -4,7 +4,8 @@
   "description": "track our room food expense",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js",
+    "start-dev": "nodemon index.js"
   },
   "author": "shajin",
   "license": "ISC",
