@@ -112,7 +112,7 @@ exports.userLogout = async (req, res) => {
     res.cookie("accessToken", "logout", {
       httpOnly: true,
       expires: "1 s",
-      secure: true,
+      // secure: true,
       sameSite: "None",
     });
     res.status(200).json({ token: accessToken, uuid });
