@@ -41,13 +41,13 @@ const approvalRoutes = require("./routes/approval");
 
 // dashboard controls
 const { dashboardEndPoint } = require("./controls/dashboard");
-app.set("trust proxy", true);
 app.use(
   cors({
     credentials: true,
     origin: "http://localhost:3000",
   })
 );
+app.set("trust proxy", true);
 app.use(express.json());
 app.use(cookieParser());
 app.get("/", (req, res) => {
