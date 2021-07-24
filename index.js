@@ -5,7 +5,8 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin:
+      "https://60fbd3dc2218a30007a4e4d1--dazzling-joliot-5fcce7.netlify.app",
   },
 });
 const mongoose = require("mongoose");
@@ -45,7 +46,8 @@ app.set("trust proxy", true);
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    origin:
+      "https://60fbd3dc2218a30007a4e4d1--dazzling-joliot-5fcce7.netlify.app",
   })
 );
 app.use(express.json());
