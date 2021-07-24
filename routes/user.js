@@ -18,7 +18,7 @@ router.get("/users", requireAuth, getUsers);
 router.get("/checkUserActive", requireAuth, checkUserActive);
 router.post("/addUser", requireAuth, addNewUser);
 router.post("/login", userLogin);
-router.post("/logout", userLogout);
+router.get("/logout", userLogout);
 router.post("/switchUserStatus", requireAuth, userInactive);
 router.post("/changePassword", requireAuth, changePassword);
 
