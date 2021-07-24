@@ -109,7 +109,12 @@ exports.checkUserActive = async (req, res) => {
 
 exports.userLogout = async (req, res) => {
   try {
-    res.clearCookie("accessToken");
+    res.cookie("accessToken", "logout", {
+      httpOnly: true,
+      expires: "1 s",
+      secure: true,
+      sameSite: "None",
+    });
     res.status(200).json({ token: accessToken, uuid });
   } catch (error) {}
 };
