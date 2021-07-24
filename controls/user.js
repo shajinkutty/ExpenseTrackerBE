@@ -43,11 +43,16 @@ exports.userLogin = async (req, res) => {
         expiresIn: "15 d",
       }
     );
+    let expiryDate = new Date();
+    expiryDate.setMonth(expiryDate.getMonth() + 1);
     // create unique uuid
     const uuid = uuidv4();
     client.set(uuid, JSON.stringify(refreshToken));
-    res.cookie("accessToken", accessToken, { httpOnly: true });
-    res.cookie("uuid", uuid, { httpOnly: true });
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      expires: expiryDate,
+    });
+    res.cookie("uuid", uuid, { httpOnly: true, expires: expiryDate });
     res.status(200).json({ token: accessToken, uuid });
   } catch (error) {
     res.status(401).json({ error: error.message });
