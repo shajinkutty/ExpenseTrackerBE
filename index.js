@@ -46,8 +46,7 @@ app.set("trust proxy", true);
 app.use(
   cors({
     credentials: true,
-    origin:
-      "https://60fbd3dc2218a30007a4e4d1--dazzling-joliot-5fcce7.netlify.app",
+    origin: true,
   })
 );
 app.use(express.json());
