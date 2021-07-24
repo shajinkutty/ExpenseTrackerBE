@@ -106,3 +106,15 @@ exports.checkUserActive = async (req, res) => {
     res.status(401).json({ error: "Access denined" });
   }
 };
+
+exports.userLogout = async (req, res) => {
+  try {
+    res.cookie("accessToken", "logout", {
+      httpOnly: true,
+      expires: "1 s",
+      secure: true,
+      sameSite: "None",
+    });
+    res.status(200).json({ token: accessToken, uuid });
+  } catch (error) {}
+};

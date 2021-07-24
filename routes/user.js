@@ -11,12 +11,14 @@ const {
   changePassword,
   getUsers,
   checkUserActive,
+  userLogout,
 } = require("../controls/user");
 
 router.get("/users", requireAuth, getUsers);
 router.get("/checkUserActive", requireAuth, checkUserActive);
 router.post("/addUser", requireAuth, addNewUser);
 router.post("/login", userLogin);
+router.post("/logout", userLogout);
 router.post("/switchUserStatus", requireAuth, userInactive);
 router.post("/changePassword", requireAuth, changePassword);
 
