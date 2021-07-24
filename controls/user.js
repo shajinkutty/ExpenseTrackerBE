@@ -97,7 +97,7 @@ exports.changePassword = async (req, res) => {
   }
 };
 
-exports.checkUserActive = async (req, res) => {
+exports.checkUser = async (req, res) => {
   const userId = req.userId;
   const { active } = await User.findById(userId);
   if (active) {
