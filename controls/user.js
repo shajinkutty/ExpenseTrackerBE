@@ -51,8 +51,13 @@ exports.userLogin = async (req, res) => {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       expires: expiryDate,
+      secure: true,
     });
-    res.cookie("uuid", uuid, { httpOnly: true, expires: expiryDate });
+    res.cookie("uuid", uuid, {
+      httpOnly: true,
+      expires: expiryDate,
+      secure: true,
+    });
     res.status(200).json({ token: accessToken, uuid });
   } catch (error) {
     res.status(401).json({ error: error.message });
