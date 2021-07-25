@@ -53,12 +53,14 @@ exports.userLogin = async (req, res) => {
       expires: expiryDate,
       // secure: true,
       sameSite: "none",
+      domain: "http://localhost:3000",
     });
     res.cookie("uuid", uuid, {
       httpOnly: true,
       expires: expiryDate,
       // secure: true,
       sameSite: "none",
+      domain: "http://localhost:3000",
     });
     res.status(200).json({ token: accessToken, uuid });
   } catch (error) {
