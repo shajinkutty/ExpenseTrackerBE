@@ -5,7 +5,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: true,
   },
 });
 const mongoose = require("mongoose");
@@ -44,7 +44,7 @@ const { dashboardEndPoint } = require("./controls/dashboard");
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    origin: true,
   })
 );
 app.set("trust proxy", true);

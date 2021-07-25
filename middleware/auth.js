@@ -35,7 +35,7 @@ const requireAuth = (req, res, next) => {
                       httpOnly: true,
                       expires: expiryDate,
                       // secure: true,
-                      sameSite: "none",
+                      // sameSite: "none",
                     });
 
                     req.userId = decodedRefreshToken.id;

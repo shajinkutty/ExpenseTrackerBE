@@ -52,15 +52,13 @@ exports.userLogin = async (req, res) => {
       httpOnly: true,
       expires: expiryDate,
       // secure: true,
-      sameSite: "none",
-      domain: "http://localhost:3000",
+      // sameSite: "none",
     });
     res.cookie("uuid", uuid, {
       httpOnly: true,
       expires: expiryDate,
       // secure: true,
-      sameSite: "none",
-      domain: "http://localhost:3000",
+      // sameSite: "none",
     });
     res.status(200).json({ token: accessToken, uuid });
   } catch (error) {
@@ -109,14 +107,13 @@ exports.checkUser = async (req, res) => {
   }
 };
 
-exports.userLogout = async (req, res) => {
-  try {
-    res.cookie("accessToken", "logout", {
-      httpOnly: true,
-      expires: "1 s",
-      // secure: true,
-      sameSite: "None",
-    });
-    res.status(200).json({ token: accessToken, uuid });
-  } catch (error) {}
+exports.userLogout = (req, res) => {
+  const { uuid } = req.cookies;
+  client.del(uuid);
+  res.cookie("accessToken", "logout", {
+    httpOnly: true,
+    // secure: true,
+    // sameSite: "None",
+  });
+  res.status(200).json("user logout");
 };
