@@ -52,13 +52,13 @@ exports.userLogin = async (req, res) => {
       httpOnly: true,
       expires: expiryDate,
       // secure: true,
-      // sameSite: "none",
+      sameSite: "none",
     });
     res.cookie("uuid", uuid, {
       httpOnly: true,
       expires: expiryDate,
       // secure: true,
-      // sameSite: "none",
+      sameSite: "none",
     });
     res.status(200).json({ token: accessToken, uuid });
   } catch (error) {
