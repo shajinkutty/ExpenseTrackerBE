@@ -33,6 +33,9 @@ const requireAuth = (req, res, next) => {
                     );
                     res.cookie("accessToken", newAccessToken, {
                       httpOnly: true,
+                      expires: expiryDate,
+                      // secure: true,
+                      sameSite: "None",
                     });
 
                     req.userId = decodedRefreshToken.id;
