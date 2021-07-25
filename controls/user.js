@@ -51,13 +51,13 @@ exports.userLogin = async (req, res) => {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       expires: expiryDate,
-      // secure: true,
+      secure: true,
       sameSite: "none",
     });
     res.cookie("uuid", uuid, {
       httpOnly: true,
       expires: expiryDate,
-      // secure: true,
+      secure: true,
       sameSite: "none",
     });
     res.status(200).json({ token: accessToken, uuid });
@@ -112,8 +112,8 @@ exports.userLogout = (req, res) => {
   client.del(uuid);
   res.cookie("accessToken", "logout", {
     httpOnly: true,
-    // secure: true,
-    // sameSite: "None",
+    secure: true,
+    sameSite: "None",
   });
   res.status(200).json("user logout");
 };

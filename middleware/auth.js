@@ -34,7 +34,7 @@ const requireAuth = (req, res, next) => {
                     res.cookie("accessToken", newAccessToken, {
                       httpOnly: true,
                       expires: expiryDate,
-                      // secure: true,
+                      secure: true,
                       sameSite: "none",
                     });
 
