@@ -4,67 +4,51 @@ const User = require("../models/User");
 
 const requireAuth = (req, res, next) => {
   // authentication from => local storage || headers
-  // const authHeader = req.headers.authorization;
-
-  const { accessToken, uuid } = req.cookies;
-  if (accessToken) {
-    jwt.verify(
-      accessToken,
-      process.env.SECRET_KEY,
-      async (err, decodedToken) => {
+  try {
+    const { tokenid } = req.headers;
+    if (tokenid) {
+      client.get(tokenid, async (err, value) => {
         if (err) {
-          client.get(uuid, async (err, value) => {
-            const refreshToken = await JSON.parse(value);
-            if (refreshToken) {
-              jwt.verify(
-                refreshToken,
-                process.env.SECRET_KEY_REFRESH,
-                (err, decodedRefreshToken) => {
-                  if (err) {
-                    client.del(uuid);
-                    res.clearCookie("accessToken");
-                    res.clearCookie("uuid");
-                    res.status(401).json("Login required");
-                  } else {
-                    const newAccessToken = jwt.sign(
-                      { id: decodedRefreshToken.id },
-                      process.env.SECRET_KEY,
-                      { expiresIn: "15 s" }
-                    );
-                    res.cookie("accessToken", newAccessToken, {
-                      httpOnly: true,
-                      expires: expiryDate,
-                      secure: true,
-                      sameSite: "none",
-                    });
-
-                    req.userId = decodedRefreshToken.id;
-                    next();
-                  }
-                }
-              );
-            } else {
-              res.status(401).json({ error: "Auth Error - no Token" });
-            }
-          });
+          res.status(401).json("Auth Error - no Token");
         } else {
-          req.userId = decodedToken.id;
-          next();
+          if (JSON.parse(value)) {
+            jwt.verify(
+              JSON.parse(value),
+              process.env.SECRET_KEY,
+              async (err, decodedToken) => {
+                console.log(err);
+                if (err) {
+                  res.status(401).json("Auth Error - no Token");
+                } else {
+                  req.userId = decodedToken.id;
+                  next();
+                }
+              }
+            );
+          } else {
+            res.status(401).json("Auth Error - no Token");
+          }
         }
-      }
-    );
-  } else {
-    res.status(401).json({ error: "Auth Error - no Token" });
+      });
+    } else {
+      res.status(401).json("Auth Error - no Token");
+    }
+  } catch (error) {
+    res.status(401).json("Auth Error - no Token");
   }
 };
 
 const checkUserActive = async (req, res, next) => {
-  const userId = req.userId;
-  const { active } = await User.findById(userId);
-  if (active) {
-    next();
-  } else {
-    res.status(401).json({ error: "Access denined" });
+  try {
+    const userId = req.userId;
+    const { active } = await User.findById(userId);
+    if (active) {
+      next();
+    } else {
+      res.status(401).json({ error: "Access denined" });
+    }
+  } catch (error) {
+    res.status(401).json("Access denined");
   }
 };
 

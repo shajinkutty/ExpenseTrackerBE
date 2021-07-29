@@ -26,40 +26,28 @@ exports.addNewUser = async (req, res) => {
 
 exports.userLogin = async (req, res) => {
   const { userName, password } = req.body;
-  const { uuid } = req.cookies;
-
-  if (uuid) {
-    client.del(uuid);
+  const { tokenid } = req.headers;
+  if (tokenid) {
+    client.del(tokenid);
   }
   try {
     const user = await User.login(userName, password);
     const accessToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
-      expiresIn: "1 d",
+      expiresIn: "30 d",
     });
-    const refreshToken = jwt.sign(
-      { id: user._id },
-      process.env.SECRET_KEY_REFRESH,
-      {
-        expiresIn: "15 d",
-      }
-    );
+    // const refreshToken = jwt.sign(
+    //   { id: user._id },
+    //   process.env.SECRET_KEY_REFRESH,
+    //   {
+    //     expiresIn: "15 d",
+    //   }
+    // );
     let expiryDate = new Date();
     expiryDate.setMonth(expiryDate.getMonth() + 1);
     // create unique uuid
     const uuid = uuidv4();
-    client.set(uuid, JSON.stringify(refreshToken));
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      expires: expiryDate,
-      secure: true,
-      sameSite: "none",
-    });
-    res.cookie("uuid", uuid, {
-      httpOnly: true,
-      expires: expiryDate,
-      secure: true,
-      sameSite: "none",
-    });
+    client.set(uuid, JSON.stringify(accessToken));
+
     res.status(200).json({ token: accessToken, uuid });
   } catch (error) {
     res.status(401).json({ error: error.message });
@@ -99,21 +87,22 @@ exports.changePassword = async (req, res) => {
 
 exports.checkUser = async (req, res) => {
   const userId = req.userId;
-  const { active } = await User.findById(userId);
-  if (active) {
-    res.status(200).json("user is active");
+  if (userId) {
+    const { active } = await User.findById(userId);
+    if (active) {
+      res.status(200).json("user is active");
+    } else {
+      res.status(401).json({ error: "Access denined" });
+    }
   } else {
-    res.status(401).json({ error: "Access denined" });
+    res.status(401).json("Access denined");
   }
 };
 
 exports.userLogout = (req, res) => {
-  const { uuid } = req.cookies;
-  client.del(uuid);
-  res.cookie("accessToken", "logout", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "None",
-  });
+  const { tokenid } = req.headers;
+  if (tokenid) {
+    client.del(tokenid);
+  }
   res.status(200).json("user logout");
 };
