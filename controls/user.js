@@ -18,7 +18,9 @@ exports.addNewUser = async (req, res) => {
   const { fullName, userName, password } = req.body;
   try {
     const user = await User.create({ fullName, userName, password });
-    res.status(200).json({ _id: user._id, fullName: user.fullName });
+    res
+      .status(200)
+      .json({ _id: user._id, fullName: user.fullName, active: true });
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
