@@ -52,7 +52,7 @@ exports.userLogin = async (req, res) => {
 
     res.status(200).json({ token: accessToken, uuid });
   } catch (error) {
-    res.status(401).json({ error: error.message });
+    res.status(401).json(error.message);
   }
 };
 
