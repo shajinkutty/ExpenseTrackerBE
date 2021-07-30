@@ -57,7 +57,7 @@ userSchema.statics.changePassword = async function (
   oldPassword,
   newPassword
 ) {
-  const user = await this.findById(userId);
+  const user = await this.findById(userId).select("+password");
   if (user) {
     const auth = await bcrypt.compare(oldPassword, user.password);
     if (auth) {
