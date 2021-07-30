@@ -22,7 +22,7 @@ exports.addNewUser = async (req, res) => {
       .status(200)
       .json({ _id: user._id, fullName: user.fullName, active: true });
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    res.status(404).json(error.message);
   }
 };
 
