@@ -17,7 +17,9 @@ exports.getUsers = async (req, res) => {
 exports.addNewUser = async (req, res) => {
   const { fullName, userName, password } = req.body;
   try {
-    const user = await User.create({ fullName, userName, password });
+    const user = await User.create({ fullName, userName, password }).select(
+      "-password"
+    );
     res.status(200).json(user);
   } catch (error) {
     res.status(404).json({ error: error.message });
