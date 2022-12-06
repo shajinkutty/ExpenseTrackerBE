@@ -1,38 +1,25 @@
 const jwt = require("jsonwebtoken");
-const client = require("../helpers/init_redis");
+// const client = require("../helpers/init_redis");
 const User = require("../models/User");
 
 const requireAuth = (req, res, next) => {
   // authentication from => local storage || headers
+  const { tokenid } = req.headers;
   try {
-    const { tokenid } = req.headers;
-    if (tokenid) {
-      client.get(tokenid, async (err, value) => {
-        if (err) {
-          res.status(401).json("Auth Error - no Token");
-        } else {
-          if (JSON.parse(value)) {
-            jwt.verify(
-              JSON.parse(value),
-              process.env.SECRET_KEY,
-              async (err, decodedToken) => {
-                console.log(err);
-                if (err) {
-                  res.status(401).json("Auth Error - no Token");
-                } else {
-                  req.userId = decodedToken.id;
-                  next();
-                }
-              }
-            );
-          } else {
-            res.status(401).json("Auth Error - no Token");
-          }
-        }
-      });
-    } else {
+    if (!tokenid) {
       res.status(401).json("Auth Error - no Token");
     }
+    jwt.verify(tokenid, process.env.SECRET_KEY, async (err, decodedToken) => {
+      if (err) {
+        res.status(401).json("Auth Error - no Token");
+      } else {
+        req.userId = decodedToken.id;
+        next();
+      }
+    });
+    // } else {
+    //   res.status(401).json("Auth Error - no Token");
+    // }
   } catch (error) {
     res.status(401).json("Auth Error - no Token");
   }

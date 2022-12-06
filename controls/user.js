@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
-const client = require("../helpers/init_redis");
+// const client = require("../helpers/init_redis");
 
 const createToken = (id, expiry) => {
   return jwt.sign({ id }, process.env.SECRET_KEY, { expiresIn: expiry });
@@ -28,10 +28,7 @@ exports.addNewUser = async (req, res) => {
 
 exports.userLogin = async (req, res) => {
   const { userName, password } = req.body;
-  const { tokenid } = req.headers;
-  if (tokenid) {
-    client.del(tokenid);
-  }
+
   try {
     const user = await User.login(userName, password);
     const accessToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
@@ -44,13 +41,13 @@ exports.userLogin = async (req, res) => {
     //     expiresIn: "15 d",
     //   }
     // );
-    let expiryDate = new Date();
-    expiryDate.setMonth(expiryDate.getMonth() + 1);
-    // create unique uuid
-    const uuid = uuidv4();
-    client.set(uuid, JSON.stringify(accessToken));
+    // let expiryDate = new Date();
+    // expiryDate.setMonth(expiryDate.getMonth() + 1);
+    // // create unique uuid
+    // const uuid = uuidv4();
+    // client.set(uuid, JSON.stringify(accessToken));
 
-    res.status(200).json({ token: accessToken, uuid });
+    res.status(200).json({ token: accessToken });
   } catch (error) {
     res.status(401).json(error.message);
   }
@@ -67,7 +64,7 @@ exports.userInactive = async (req, res) => {
       }`,
     });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json(error.message);
   }
 };
 
@@ -103,8 +100,6 @@ exports.checkUser = async (req, res) => {
 
 exports.userLogout = (req, res) => {
   const { tokenid } = req.headers;
-  if (tokenid) {
-    client.del(tokenid);
-  }
+
   res.status(200).json("user logout");
 };

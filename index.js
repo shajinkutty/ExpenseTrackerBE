@@ -15,13 +15,13 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 dotenv.config();
 
-const client = redis.createClient(process.env.REDISCLOUD_URL, {
-  no_ready_check: true,
-});
+// const client = redis.createClient(process.env.REDISCLOUD_URL, {
+//   no_ready_check: true,
+// });
 
-client.on("error", (err) => {
-  console.log(err);
-});
+// client.on("error", (err) => {
+//   console.log(err);
+// });
 const PORT = process.env.PORT || 5000;
 // mongoose params
 const connectionParams = {
